@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     hooks: {
       beforeCreate(user, options) {
-        user.role = 'Administrator'
+        user.role = 'User'
       },
     }
   });

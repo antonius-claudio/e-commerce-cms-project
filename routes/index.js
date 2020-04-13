@@ -6,6 +6,8 @@ const authentication = require('../middlewares/authentication');
 
 router.post('/login', controllerUser.login);
 
+router.post('/register', controllerUser.register);
+
 router.use('/products', authentication, routerProduct);
 
 router.use(errorHandler);
