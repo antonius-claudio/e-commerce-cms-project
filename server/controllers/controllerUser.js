@@ -2,7 +2,7 @@ const { User } = require('../models');
 const { compare } = require('../helpers/bcrypt');
 const { sign } = require('../helpers/jwt');
 class controllerUser {
-    static login (req, res, next){
+    static login(req, res, next){
         let form = {
             email: req.body.email,
             password: req.body.password
