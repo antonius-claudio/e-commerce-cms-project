@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         notNull: {
           msg: 'Price is required!'
+        },
+        min: {
+          args: 1,
+          msg: 'Price min 1!'
         }
       }
     },
@@ -46,6 +50,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         notNull: {
           msg: 'Stock is required!'
+        },
+        min: {
+          args: 1,
+          msg: 'Stock min 1!'
         }
       }
     }
