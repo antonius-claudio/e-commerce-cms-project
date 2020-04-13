@@ -2,7 +2,33 @@ const { User } = require('../models');
 const { compare } = require('../helpers/bcrypt');
 const { sign } = require('../helpers/jwt');
 class controllerUser {
-    static login(req, res, next){
+
+    static register(req, res, next) {
+        let form = {
+            email: req.body.email,
+            password: req.body.password
+        }
+        User.findOne({
+            where: {
+                email: form.email
+            }
+        })
+        .then((result) => {
+            if (result) {
+                throw {status:401, msg: 'Email already used!'};
+            } else {
+                return User.create(form);
+            }
+        })
+        .then((result) => {
+            res.status(201).json(result);
+        })
+        .catch((err) => {
+            next(err);
+        });
+    }
+
+    static login(req, res, next) {
         let form = {
             email: req.body.email,
             password: req.body.password
