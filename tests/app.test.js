@@ -1,5 +1,7 @@
-const app = require('express')();
+const express = require('express');
 const request = require('supertest');
+const app = express();
+// const app = require('../server')
 
 beforeAll(() => {
   
@@ -7,11 +9,16 @@ beforeAll(() => {
 
 // routes get products
 app.get('/products', function(req, res, next) {
-    if (req.headers.access_token) {
-        res.status(200).json({id: 1, name: 'sendok', price: 20000, stock: 100})
-    } else {
+    // kalau tidak ada token
+    if (!req.headers.access_token) {
         res.status(401).json({message: 'Invalid Token'})
     }
+    // kalau inputan kosong atau null
+    if (req.body.name === '' || req.body.name === null) {
+        
+    }
+    
+    res.status(200).json({id: 1, name: 'sendok', price: 20000, stock: 100})
 })
 
 // test
