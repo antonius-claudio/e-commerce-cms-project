@@ -61,7 +61,7 @@ const access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlVzZ
 
 // test
 describe('Users routes', () => {
-    describe('/Users post', () => {
+    describe('/login post', () => {
         it('Login Users complete input', function(done) {
             request(app)
                 .post('/login')
