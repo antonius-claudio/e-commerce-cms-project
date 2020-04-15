@@ -4,7 +4,7 @@
         <td>{{product.image_url}}</td>
         <td>{{product.price}}</td>
         <td>{{product.stock}}</td>
-        <td>$0.87</td>
+        <td><router-link class="btn waves-effect waves-light" :to="{ name: 'FormEditProduct', params: { id: product.id }}">edit</router-link></td>
         <td><button class="btn red waves-effect waves-light" @click.prevent="deleteProduct">Delete</button></td>
     </tr> 
 </template>
@@ -29,7 +29,27 @@ export default {
             .then((result) => {
                 if (result.value) {
                     console.log('List Product DeleteProduct method di list product')
-                    this.$store.dispatch('deleteProduct', this.product.id);
+                    this.$store.dispatch('deleteProduct', this.product.id)
+                        .then((result) => {
+                            Swal.fire(
+                            'Success!',
+                            'Product Successfully Deleted.!',
+                            'success'
+                            )
+                        })
+                        .catch((err) => {
+                            Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: err,
+                                    showClass: {
+                                        popup: 'animated fadeInDown faster'
+                                    },
+                                    hideClass: {
+                                        popup: 'animated fadeOutUp faster'
+                                    }
+                                })
+                        })
                 }
             })
         }

@@ -14,6 +14,13 @@ const routes = [
     path: '/products',
     name: 'Products',
     component: () => import(/* webpackChunkName: "about" */ '../views/Products.vue'),
+    children: [
+      {
+        path: ':id',
+        name: 'FormEditProduct',
+        component: () => import('../components/FormEditProduct.vue')
+      }
+    ]
   }
 ];
 

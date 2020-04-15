@@ -12,6 +12,7 @@
             </div>
             <hr>
             <FormAddProduct v-if="viewForm" @viewFormFinish="viewFormFinish" />
+            <router-view></router-view>
             <table class="highlight responsive-table">
                 <thead>
                     <tr>

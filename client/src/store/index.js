@@ -22,6 +22,15 @@ const store = new Vuex.Store({
         },
         ADD_PRODUCT(state, payload) {
             state.products.push(payload);
+        },
+        UPDATE_PRODUCT(state, payload) {
+            let index = state.products.findIndex(product => product.id === payload.id);
+            state.products[index].name = payload.name;
+            state.products[index].image_url = payload.image_url;
+            state.products[index].price = payload.price;
+            state.products[index].stock = payload.stock;
+            console.log('state.products[index]... di update product', state.products[index])
+            console.log('payload... di update product', payload)
         }
     },
     actions: {
@@ -48,35 +57,27 @@ const store = new Vuex.Store({
         },
         deleteProduct({ commit }, id) {
             console.log('masuk deleteProduct action di store', id);
-            axios({
-                url: url + `/products/${id}`,
-                method: 'DELETE',
-                headers: {
-                    access_token: localStorage.getItem('access_token')
-                }
-            })
-            .then((result) => {
-                console.log('Then product delete di database');
-                commit('DELETE_PRODUCT', id);
-                // this.$emit('itemDelete', this.product.id);
-            })
-            .catch((err) => {
-                console.log('error delete', err.response.data.message);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: err.response.data.message,
-                    showClass: {
-                        popup: 'animated fadeInDown faster'
-                    },
-                    hideClass: {
-                        popup: 'animated fadeOutUp faster'
+            return new Promise ((resolve, reject) => {
+                axios({
+                    url: url + `/products/${id}`,
+                    method: 'DELETE',
+                    headers: {
+                        access_token: localStorage.getItem('access_token')
                     }
                 })
-            });
+                .then((result) => {
+                    console.log('Then product delete di database');
+                    commit('DELETE_PRODUCT', id);
+                    resolve(true);
+                })
+                .catch((err) => {
+                    console.log('error delete', err.response.data.message);
+                    reject(err.response.data.message)
+                });
+            })
         },
         createProduct({ commit }, payload) {
-            console.log('masuk input form di store',payload);
+            console.log('masuk createProduct action di store',payload);
             return new Promise ((resolve, reject) => {
                 axios({
                     url: url + `/products`,
@@ -101,8 +102,40 @@ const store = new Vuex.Store({
                     reject(err.response.data.message)
                 });
             })
+        },
+        updateProduct({ commit }, payload) {
+            console.log('masuk updateProduct action di store', payload);
+            return new Promise ((resolve, reject) => {
+                axios({
+                    url: url + `/products/${payload.id}`,
+                    method: 'PUT',
+                    headers: {
+                        access_token: localStorage.getItem('access_token')
+                    },
+                    data: {
+                        name: payload.name,
+                        price: payload.price,
+                        stock: payload.stock,
+                        image_url: payload.image_url
+                    }
+                })
+                .then((result) => {
+                    console.log('then updated sebelum commit', result.data);
+                    commit('UPDATE_PRODUCT', result.data);
+                    resolve(true)
+                })
+                .catch((err) => {
+                    console.log('error create', err.response.data.message);
+                    reject(err.response.data.message)
+                });
+            })
         }
-        
+    },
+    getters: {
+        getProductById: (state) => (id) => {
+            console.log('masuk getters getProductbyId action di store')
+            return state.products.find(product => product.id === id)
+        },
     }
 });
 
