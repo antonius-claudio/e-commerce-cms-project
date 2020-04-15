@@ -1,13 +1,16 @@
 const { User } = require('../models');
 const { compare } = require('../helpers/bcrypt');
 const { sign } = require('../helpers/jwt');
+const { hash } = require('../helpers/bcrypt');
+
 class controllerUser {
 
     static register(req, res, next) {
         let form = {
             email: req.body.email,
-            password: req.body.password
+            password: hash(req.body.password)
         }
+        console.log('masuk register', form)
         User.findOne({
             where: {
                 email: form.email
@@ -15,15 +18,23 @@ class controllerUser {
         })
         .then((result) => {
             if (result) {
+                console.log('masuk if sudah ada')
                 throw {status:401, msg: 'Email already used!'};
             } else {
+                console.log('masuk else belum ada')
                 return User.create(form);
             }
         })
         .then((result) => {
-            res.status(201).json(result);
+            console.log('masuk result', result)
+            let access_token = sign({
+                UserId: result.id,
+                UserEmail: result.email
+            })
+            res.status(201).json({access_token, id:result.id, email:result.email});
         })
         .catch((err) => {
+            console.log('masuk error', err)
             next(err);
         });
     }

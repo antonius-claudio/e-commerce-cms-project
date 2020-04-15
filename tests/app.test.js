@@ -15,6 +15,7 @@ const app = require('../app');
 
 // contoh token
 const access_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlVzZXJFbWFpbCI6InVzZXIxQG1haWwuY29tIiwiaWF0IjoxNTg2NzY5MzU2fQ.1ssiiZlj6I2mhhZMFbt5soXRa4EP4k3h-IsVPOtp9OM';
+const access_token_user = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjMsIlVzZXJFbWFpbCI6InVzZXIyQG1haWwuY29tIiwiaWF0IjoxNTg2OTY4OTQ0fQ.YPk5TmK7O5T3AJdE9UrkV33KtvNyT88TbKcU9vbRTdE';
 
 // routes get products
 // app.get('/products', function(req, res, next) {
@@ -89,7 +90,7 @@ describe('Users routes', () => {
         it('Login Users invalid email', function(done) {
             request(app)
                 .post('/login')
-                .send({email:'user2@mail.com', password:'1234'})
+                .send({email:'3123123@mail.com', password:'1234'})
                 .then(response => {
                     let { status, body } = response;
                     expect(status).toBe(404);
@@ -112,154 +113,217 @@ describe('Users routes', () => {
 })
 
 describe('Products routes', () => {
-    describe('/products get', () => {
-        it('Get products with access_token', function(done) {
-            request(app)
-                .get('/products')
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(200);
-                    done();
-                })
+    describe('As Admin', () => {
+        describe('/products get', () => {
+            it('Get products with access_token', function(done) {
+                request(app)
+                    .get('/products')
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(200);
+                        done();
+                    })
+            })
+    
+            it('Get Products without access_token', function (done) {
+                request(app)
+                    .get('/products')
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["Don't have access"]});
+                        done();
+                    })
+            })
+    
         })
-
-        it('Get Products without access_token', function (done) {
-            request(app)
-                .get('/products')
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(401);
-                    done();
-                })
+    
+        describe('/products post', () => {
+            it('Create products with access_token', function(done) {
+                request(app)
+                    .post('/products')
+                    .set('access_token', access_token)
+                    .send({name:'garpu', image_url:'gambar', price:10000, stock:100})
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(201);
+                        done();
+                    })
+            })
+    
+            it('Create products with access_token and empty input', function(done) {
+                request(app)
+                    .post('/products')
+                    .send({name:'', image_url:null, price:undefined, stock:0})
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(400);
+                        done();
+                    })
+            })
+    
+            it('Create products without access_token', function(done) {
+                request(app)
+                    .post('/products')
+                    .send({name:'garpu', image_url:'gambar', price:10000, stock:100})
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["Don't have access"]});
+                        done();
+                    })
+            })
+    
         })
-
+    
+        describe('/products put', () => {
+            let idUpdate = 2;
+            let idUpdateMax = 30;
+    
+            it('Update products with access_token & complete input', function(done) {
+                request(app)
+                    .put('/products/' + idUpdate)
+                    .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(200);
+                        done();
+                    })
+            })
+    
+            it('Update products with access_token & invalid input', function(done) {
+                request(app)
+                    .put('/products/' + idUpdate)
+                    .send({name:'', image_url:null, price:undefined, stock:0})
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(400);
+                        done();
+                    })
+            })
+    
+            it('Update products without access_token & complete input', function(done) {
+                request(app)
+                    .put('/products/' + idUpdate)
+                    .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["Don't have access"]});
+                        done();
+                    })
+            })
+    
+            it('Update products with access_token, complete input & Invalid Id', function(done) {
+                request(app)
+                    .put('/products/' + idUpdateMax)
+                    .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(404);
+                        done();
+                    })
+            })
+        })
+    
+        describe('/products delete', () => {
+            let idDelete = 9;
+            let idDeleteMax = 30; //biar notfound
+    
+            it('Delete products without access_token & Valid Id', function(done) {
+                request(app)
+                    .delete('/products/' + idDelete)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["Don't have access"]});                        
+                        done();
+                    })
+            })
+    
+            it('Delete products with access_token & Invalid Id', function(done) {
+                request(app)
+                    .delete('/products/' + idDeleteMax)
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(404);
+                        done();
+                    })
+            })
+    
+            it('Delete products with access_token and Valid Id', function(done) {
+                request(app)
+                    .delete('/products/' + idDelete)
+                    .set('access_token', access_token)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(200);
+                        done();
+                    })
+            })
+        })
     })
-
-    describe('/products post', () => {
-        it('Create products with access_token', function(done) {
-            request(app)
-                .post('/products')
-                .set('access_token', access_token)
-                .send({name:'garpu', image_url:'gambar', price:10000, stock:100})
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(201);
-                    done();
-                })
+    describe('As User', () => {
+        describe('/products get', () => {
+            it('Get products with access_token', function(done) {
+                request(app)
+                    .get('/products')
+                    .set('access_token', access_token_user)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(status).toBe(200);
+                        done();
+                    })
+            })
         })
-
-        it('Create products with access_token and empty input', function(done) {
-            request(app)
-                .post('/products')
-                .send({name:'', image_url:null, price:undefined, stock:0})
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(400);
-                    done();
-                })
+    
+        describe('/products post', () => {
+            it('Create products with access_token', function(done) {
+                request(app)
+                    .post('/products')
+                    .set('access_token', access_token_user)
+                    .send({name:'garpu', image_url:'gambar', price:10000, stock:100})
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["You'r not Admin"]});
+                        done();
+                    })
+            })
         })
-
-        it('Create products without access_token', function(done) {
-            request(app)
-                .post('/products')
-                .send({name:'garpu', image_url:'gambar', price:10000, stock:100})
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(401);
-                    done();
-                })
+    
+        describe('/products put', () => {
+            let idUpdate = 2;
+            let idUpdateMax = 30;
+    
+            it('Update products with access_token & complete input', function(done) {
+                request(app)
+                    .put('/products/' + idUpdate)
+                    .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
+                    .set('access_token', access_token_user)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["You'r not Admin"]});
+                        done();
+                    })
+            })
         })
-
-    })
-
-    describe('/products put', () => {
-        let idUpdate = 3;
-        let idUpdateMax = 30;
-
-        it('Update products with access_token & complete input', function(done) {
-            request(app)
-                .put('/products/' + idUpdate)
-                .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(200);
-                    done();
-                })
-        })
-
-        it('Update products with access_token & invalid input', function(done) {
-            request(app)
-                .put('/products/' + idUpdate)
-                .send({name:'', image_url:null, price:undefined, stock:0})
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(400);
-                    done();
-                })
-        })
-
-        it('Update products without access_token & complete input', function(done) {
-            request(app)
-                .put('/products/' + idUpdate)
-                .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(401);
-                    done();
-                })
-        })
-
-        it('Update products with access_token, complete input & Invalid Id', function(done) {
-            request(app)
-                .put('/products/' + idUpdateMax)
-                .send({name:'garpu2', image_url:'gambar2', price:20000, stock:200})
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(404);
-                    done();
-                })
-        })
-    })
-
-    describe('/products delete', () => {
-        let idDelete = 16;
-        let idDeleteMax = 30; //biar notfound
-
-        it('Delete products without access_token & Valid Id', function(done) {
-            request(app)
-                .delete('/products/' + idDelete)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(401);
-                    done();
-                })
-        })
-
-        it('Delete products with access_token & Invalid Id', function(done) {
-            request(app)
-                .delete('/products/' + idDeleteMax)
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(404);
-                    done();
-                })
-        })
-
-        it('Delete products with access_token and Valid Id', function(done) {
-            request(app)
-                .delete('/products/' + idDelete)
-                .set('access_token', access_token)
-                .then(response => {
-                    let { status, body } = response;
-                    expect(status).toBe(200);
-                    done();
-                })
+    
+        describe('/products delete', () => {
+            let idDelete2 = 8;
+    
+            it('Delete products with access_token & Valid Id', function(done) {
+                request(app)
+                    .delete('/products/' + idDelete2)
+                    .set('access_token', access_token_user)
+                    .then(response => {
+                        let { status, body } = response;
+                        expect(body).toEqual({message:["You'r not Admin"]});
+                        done();
+                    })
+            })
+ 
         })
     })
 })

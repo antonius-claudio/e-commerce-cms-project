@@ -8,7 +8,9 @@ router.post('/login', controllerUser.login);
 
 router.post('/register', controllerUser.register);
 
-router.use('/products', authentication, routerProduct);
+router.use(authentication);
+
+router.use('/products', routerProduct);
 
 router.use(errorHandler);
 
