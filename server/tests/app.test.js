@@ -8,7 +8,9 @@ const request = require('supertest');
 // ----------------------------------------------------------------
 
 // kalau mau test pakai controller ini di uncomment
-const app = require('../server');
+const app = require('../app');
+// const app = require('../server');
+
 // ------------------------------------------------
 
 // contoh token

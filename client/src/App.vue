@@ -1,32 +1,48 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view></router-view>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+    }
+  },
+  component: {
+  },
+  methods: {
+  },
+  computed: {
+    
+  },
+  beforeCreate() {
+    console.log('---beforeCreate---');
+  },
+  created() {
+    console.log('---created---');
+    isLogged: { 
+      console.log('---masuk created isLogged---');
+      if(localStorage.getItem('access_token')){
+        console.log(this.$store.state.isLogin)
+        console.log('---masuk created isLogged if access_token---');
+        this.$store.commit('SET_ISLOGIN', true);
+        console.log(this.$store.state.isLogin)
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+        this.$router.push('products');
+      }
+    }
+  },
+  mounted() {
+    console.log('---mounted---');
+  },
+  watch: {
+    // isLogged: function(val, oldVal) {
+    //   console.log('---watch isLogged---,', val);
+    //   if(localStorage.getItem('access_token')){
+    //     console.log('---if access_token watch isLogged---,');
+    //   }
+    // }
+  },
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
