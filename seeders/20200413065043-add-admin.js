@@ -8,6 +8,12 @@ module.exports = {
       role: 'Administrator',
       createdAt: new Date(),
       updatedAt: new Date()
+    },{
+      email: 'guest@mail.com',
+      password: hash('1234'),
+      role: 'User',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }])
     /*
       Add altering commands here.
