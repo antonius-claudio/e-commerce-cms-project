@@ -12,6 +12,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(router);
-app.listen(port, () => {
-    console.log('listening on port: ', port);
-})
+
+if (process.env.NODE_ENV !== 'test') {
+    // app listen disini, tidak jalan kalau sedang test
+    app.listen(port, () => {
+        console.log('listening on port: ', port);
+    })
+}
+
+module.exports = app
