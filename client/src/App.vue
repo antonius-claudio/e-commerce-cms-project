@@ -27,6 +27,7 @@ export default {
         console.log(this.$store.state.isLogin)
         console.log('---masuk created isLogged if access_token---');
         this.$store.commit('SET_ISLOGIN', true);
+        this.$store.commit('SET_ROLE', localStorage.getItem('role'));
         console.log(this.$store.state.isLogin)
 
         this.$router.push('products');

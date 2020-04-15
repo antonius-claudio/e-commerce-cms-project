@@ -6,12 +6,12 @@
                 <div class="col s6">
                     <h5>Products</h5>
                 </div>
-                <div class="col s6 divAddButton">
+                <div class="col s6 divAddButton" v-if="$store.state.role === 'Administrator'">
                     <a class="btn-floating btn-large waves-effect waves-light red" @click.prevent="formAddProduct"><i class="material-icons">add</i></a>
                 </div>
             </div>
             <hr>
-            <FormAddProduct v-if="viewForm" @viewFormFinish="viewFormFinish" />
+            <FormAddProduct v-if="$store.state.role === 'Administrator' && viewForm" @viewFormFinish="viewFormFinish" />
             <router-view></router-view>
             <table class="highlight responsive-table">
                 <thead>
@@ -20,8 +20,8 @@
                         <th>Image Url</th>
                         <th>Price</th>
                         <th>Stock</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th v-if="$store.state.role === 'Administrator'">Edit</th>
+                        <th v-if="$store.state.role === 'Administrator'">Delete</th>
                     </tr>
                 </thead>
                 <tbody>

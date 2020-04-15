@@ -8,11 +8,15 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state: {
         isLogin: false,
+        role: null,
         products: []
     },
     mutations: {
         SET_ISLOGIN(state, n) {
             state.isLogin = n;
+        },
+        SET_ROLE(state, n) {
+            state.role = n;
         },
         SET_PRODUCTS(state, payload) {
             state.products = payload;
@@ -143,7 +147,9 @@ const store = new Vuex.Store({
                 })
                 .then((result) => {
                     console.log('masuk then login ')
-                    this.state.isLogin = true;
+                    commit('SET_ISLOGIN', true);
+                    commit('SET_ROLE', result.data.role);
+                    localStorage.setItem('role', result.data.role);
                     localStorage.setItem('access_token', result.data.access_token);
                     localStorage.setItem('id', result.data.id);
                     localStorage.setItem('email', result.data.email);

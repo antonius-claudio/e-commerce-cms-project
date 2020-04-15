@@ -31,7 +31,7 @@ class controllerUser {
                 UserId: result.id,
                 UserEmail: result.email
             })
-            res.status(201).json({access_token, id:result.id, email:result.email});
+            res.status(201).json({access_token, id:result.id, email:result.email, role:result.role});
         })
         .catch((err) => {
             console.log('masuk error', err)
@@ -64,7 +64,7 @@ class controllerUser {
                                 UserId: result.id,
                                 UserEmail: result.email
                             })
-                            res.status(200).json({access_token, id:result.id, email:result.email});
+                            res.status(200).json({access_token, id:result.id, email:result.email, role:result.role});
                         } else {
                             throw {status:401, msg: 'Password invalid!'};
                         }

@@ -4,8 +4,8 @@
         <td>{{product.image_url}}</td>
         <td>{{product.price}}</td>
         <td>{{product.stock}}</td>
-        <td><router-link class="btn waves-effect waves-light" :to="{ name: 'FormEditProduct', params: { id: product.id }}">edit</router-link></td>
-        <td><button class="btn red waves-effect waves-light" @click.prevent="deleteProduct">Delete</button></td>
+        <td v-if="$store.state.role === 'Administrator'"><router-link class="btn waves-effect waves-light" :to="{ name: 'FormEditProduct', params: { id: product.id }}">edit</router-link></td>
+        <td v-if="$store.state.role === 'Administrator'"><button class="btn red waves-effect waves-light" @click.prevent="deleteProduct">Delete</button></td>
     </tr> 
 </template>
 <script>
