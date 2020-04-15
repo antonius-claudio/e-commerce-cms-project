@@ -129,6 +129,31 @@ const store = new Vuex.Store({
                     reject(err.response.data.message)
                 });
             })
+        },
+        loginUser({ commit }, payload) {
+            console.log('masuk LoginUser action di store', payload);
+            return new Promise ((resolve, reject) => {
+                axios({
+                    url: url + `/login`,
+                    method: 'POST',
+                    data: {
+                        email: payload.email,
+                        password: payload.password
+                    }
+                })
+                .then((result) => {
+                    console.log('masuk then login ')
+                    this.state.isLogin = true;
+                    localStorage.setItem('access_token', result.data.access_token);
+                    localStorage.setItem('id', result.data.id);
+                    localStorage.setItem('email', result.data.email);
+                    console.log('test')
+                    resolve(result.data.email)
+                })
+                .catch((err) => {
+                    reject(err.response.data.message);
+                });
+            })
         }
     },
     getters: {

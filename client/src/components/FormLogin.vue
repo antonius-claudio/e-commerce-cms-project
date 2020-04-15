@@ -28,12 +28,39 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.emailLogin);
-      console.log(this.passwordLogin);
-      console.log('Method login');
-      this.$store.commit('SET_ISLOGIN', true);
-      localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlVzZXJFbWFpbCI6InVzZXIxQG1haWwuY29tIiwiaWF0IjoxNTg2NzY5MzU2fQ.1ssiiZlj6I2mhhZMFbt5soXRa4EP4k3h-IsVPOtp9OM');
-      this.$router.push('products');
+      let inputLogin = {
+        email: this.emailLogin,
+        password: this.passwordLogin
+      };
+      console.log('Method login', inputLogin);
+      this.$store.dispatch('loginUser', inputLogin)
+      .then((result) => {
+        console.log('method login di form login', result)
+        Swal.fire({
+          icon: 'success',
+          title: `Wellcome ${result}`,
+          showConfirmButton: false,
+          timer: 1500
+        })
+        this.$router.push('/products');
+      })
+      .catch((err) => {
+        console.log('method error login di form login', err)
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err,
+            showClass: {
+                popup: 'animated fadeInDown faster'
+            },
+            hideClass: {
+                popup: 'animated fadeOutUp faster'
+            }
+        })
+      });
+      // this.$store.commit('SET_ISLOGIN', true);
+      // localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlVzZXJFbWFpbCI6InVzZXIxQG1haWwuY29tIiwiaWF0IjoxNTg2NzY5MzU2fQ.1ssiiZlj6I2mhhZMFbt5soXRa4EP4k3h-IsVPOtp9OM');
+      // this.$router.push('products');
     }
   },
 }

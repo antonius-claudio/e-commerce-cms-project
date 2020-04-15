@@ -1,7 +1,10 @@
 const router = require('express').Router();
 const controllerProduct = require('../controllers/controllerProduct');
+const authorization = require('../middlewares/authorization');
 
 router.get('/', controllerProduct.getProduct);
+
+router.use(authorization);
 
 router.post('/', controllerProduct.createProduct);
 
