@@ -1,18 +1,20 @@
 <template>
-    <div class="row">
-      <div class="col s4 offset-s4">
-        <h5>Login</h5>
-        <hr>
-        <div class="input-field col s12">
-          <input placeholder="email" type="text" class="validate" v-model="emailLogin">
-        </div>
-        <div class="input-field col s12">
-          <input placeholder="password" type="password" class="validate" v-model="passwordLogin">
-        </div>
-        <div class="input-field col s12">
-          <button class="btn waves-effect waves-light" type="submit" @click.prevent="login">Submit
-            <i class="material-icons right">send</i>
-          </button>
+    <div class="login-body">
+      <div class="row formlog">
+        <div class="col s4 offset-s4 boxlog">
+          <h5 class="titleform">Login</h5>
+          <hr>
+          <div class="input-field col s12 inputcolor">
+            <input placeholder="email" type="text" class="validate" v-model="emailLogin">
+          </div>
+          <div class="input-field col s12 inputcolor">
+            <input placeholder="password" type="password" class="validate" v-model="passwordLogin">
+          </div>
+          <div class="input-field col s12 right">
+            <button class="btn waves-effect waves-light" type="submit" @click.prevent="login">Submit
+              <i class="material-icons right">send</i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -65,3 +67,27 @@ export default {
   },
 }
 </script>
+<style>
+  .formlog {
+    margin-top:15%;
+  }
+  .boxlog {
+    background-color: #caead1b5;
+    border-radius: 10px;
+  }
+  .right {
+    text-align: right;
+  }
+  .titleform {
+    font-size: 2em;
+    text-align: center;
+    color: #f1798a;
+    text-shadow: 0px 2px 2px rgba(109, 66, 66, 0.4);
+  }
+  .inputcolor {
+    color: #4e4848;
+  }
+  .inputcolor ::placeholder {
+    color: #d06464;
+  }
+</style>
