@@ -4,6 +4,8 @@ Content Management System for E-Commerce
 
 ## Demo : https://e-commerce-cms-69dc9.web.app/
 
+## Server : https://floating-falls-61705.herokuapp.com/
+
 ## POST /login
 > login as administrator / user
 
